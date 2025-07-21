@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('ServiceWorker успешно зарегистрирован!');
+        })
+        .catch((error) => {
+          console.log('Ошибка регистрации ServiceWorker:', error);
+        });
+    });
+  }
+</script>
+	<link rel="manifest" href="/manifest.json">
+	<meta name="theme-color" content="#005baa">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Популярные маршруты - Путешествия по России</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .routes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .route-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .route-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .route-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .route-content {
+            padding: 15px;
+        }
+        
+        .route-title {
+            margin-top: 0;
+            color: #005baa;
+        }
+        
+        .route-description {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .route-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #888;
+        }
+        
+        .filter-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: #005baa;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .routes-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="routes.html">Маршруты</a></li>
+                <li><a href="feedback.html">Отзывы</a></li>
+                <li><a href="todo.html">Планировщик</a></li>
+            </ul>
+        </nav>
+        <h1>Популярные маршруты по России</h1>
+    </header>
+
+    <main>
+        <section class="filter-controls">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="nature">Природа</button>
+            <button class="filter-btn" data-filter="culture">Культура</button>
+            <button class="filter-btn" data-filter="active">Активный отдых</button>
+        </section>
+
+        <div class="routes-container">
+            <div class="route-card" data-category="nature">
+                <img src="images/baikal.jpg" alt="Озеро Байкал" class="route-image">
+                <div class="route-content">
+                    <h3 class="route-title">Озеро Байкал</h3>
+                    <p class="route-description">Самое глубокое озеро в мире с кристально чистой водой и уникальной природой. Идеально для экотуризма и зимних приключений.</p>
+                    <div class="route-details">
+                        <span>Сложность: средняя</span>
+                        <span>Сезон: круглый год</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="route-card" data-category="culture">
+                <img src="images/golden-ring.jpg" alt="Золотое кольцо" class="route-image">
+                <div class="route-content">
+                    <h3 class="route-title">Золотое кольцо России</h3>
+                    <p class="route-description">Тур по древним городам с богатой историей и архитектурой. Посетите Суздаль, Владимир, Ярославль и другие жемчужины.</p>
+                    <div class="route-details">
+                        <span>Сложность: легкая</span>
+                        <span>Сезон: апрель-октябрь</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="route-card" data-category="nature active">
+                <img src="images/altai.jpg" alt="Алтай" class="route-image">
+                <div class="route-content">
+                    <h3 class="route-title">Горный Алтай</h3>
+                    <p class="route-description">Горные ландшафты, чистейшие реки и озера. Отличное место для трекинга, рафтинга и конных прогулок.</p>
+                    <div class="route-details">
+                        <span>Сложность: высокая</span>
+                        <span>Сезон: май-сентябрь</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="route-card" data-category="culture">
+                <img src="images/peterhof.jpg" alt="Петергоф" class="route-image">
+                <div class="route-content">
+                    <h3 class="route-title">Санкт-Петербург и Петергоф</h3>
+                    <p class="route-description">Культурная столица России с дворцами, музеями и разводными мостами. Петергоф - жемчужина дворцово-паркового искусства.</p>
+                    <div class="route-details">
+                        <span>Сложность: легкая</span>
+                        <span>Сезон: круглый год</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="route-card" data-category="nature">
+                <img src="images/kamchatka.jpg" alt="Камчатка" class="route-image">
+                <div class="route-content">
+                    <h3 class="route-title">Камчатка</h3>
+                    <p class="route-description">Долина гейзеров, вулканы и дикая природа. Уникальный опыт для любителей приключений и фотографов.</p>
+                    <div class="route-details">
+                        <span>Сложность: высокая</span>
+                        <span>Сезон: июль-сентябрь</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="route-card" data-category="active">
+                <img src="images/elbrus.jpg" alt="Эльбрус" class="route-image">
+                <div class="route-content">
+                    <h3 class="route-title">Восхождение на Эльбрус</h3>
+                    <p class="route-description">Самая высокая точка России и Европы. Маршрут для подготовленных туристов с опытными гидами.</p>
+                    <div class="route-details">
+                        <span>Сложность: экстремальная</span>
+                        <span>Сезон: июнь-август</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Путешествия по России</p>
+    </footer>
+
+    <script>
+        // Фильтрация маршрутов
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const routeCards = document.querySelectorAll('.route-card');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Удаляем активный класс у всех кнопок
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Добавляем активный класс текущей кнопке
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    routeCards.forEach(card => {
+                        if (filterValue === 'all' || card.getAttribute('data-category').includes(filterValue)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

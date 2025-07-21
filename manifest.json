@@ -1,0 +1,21 @@
+{
+  "name": "Путешествия по России",
+  "short_name": "Туризм",
+  "description": "Планирование путешествий по лучшим местам России",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#005baa",
+  "theme_color": "#005baa",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

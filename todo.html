@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('ServiceWorker успешно зарегистрирован!');
+        })
+        .catch((error) => {
+          console.log('Ошибка регистрации ServiceWorker:', error);
+        });
+    });
+  }
+</script>
+	<link rel="manifest" href="/manifest.json">
+	<meta name="theme-color" content="#005baa">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировщик путешествия - Путешествия по России</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .todo-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .task-input {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .task-input input {
+            flex-grow: 1;
+            padding: 8px;
+        }
+        .task-input button {
+            padding: 8px 15px;
+            margin-left: 10px;
+        }
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+        .task-item.completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        .task-checkbox {
+            margin-right: 10px;
+        }
+        .task-date {
+            margin-left: 10px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        .delete-btn {
+            margin-left: auto;
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="routes.html">Маршруты</a></li>
+                <li><a href="feedback.html">Отзывы</a></li>
+                <li><a href="todo.html">Планировщик</a></li>
+            </ul>
+        </nav>
+        <h1>Планировщик путешествия</h1>
+    </header>
+
+    <main>
+        <div class="todo-container">
+            <div class="task-input">
+                <input type="text" id="taskInput" placeholder="Добавьте задачу...">
+                <input type="date" id="taskDate">
+                <button onclick="addTask()">Добавить</button>
+            </div>
+            
+            <ul class="task-list" id="taskList"></ul>
+            
+            <div class="controls">
+                <button onclick="deleteSelected()">Удалить выделенные</button>
+                <select id="sortSelect" onchange="sortTasks()">
+                    <option value="date">Сортировать по дате</option>
+                    <option value="name">Сортировать по имени</option>
+                </select>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Путешествия по России</p>
+    </footer>
+
+    <script>
+        // Загрузка задач из localStorage при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTasks();
+        });
+
+        // Массив для хранения задач
+        let tasks = [];
+
+        // Добавление новой задачи
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskDate = document.getElementById('taskDate');
+            
+            if (taskInput.value.trim() === '') return;
+            
+            const newTask = {
+                id: Date.now(),
+                text: taskInput.value.trim(),
+                date: taskDate.value,
+                completed: false,
+                selected: false
+            };
+            
+            tasks.push(newTask);
+            saveTasks();
+            renderTasks();
+            
+            taskInput.value = '';
+            taskDate.value = '';
+        }
+
+        // Отображение задач
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+            
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = 'task-item' + (task.completed ? ' completed' : '');
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.selected ? 'checked' : ''} 
+                        onchange="toggleSelect(${task.id})">
+                    <span onclick="toggleComplete(${task.id})">${task.text}</span>
+                    <span class="task-date">${task.date || 'Без даты'}</span>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">×</button>
+                `;
+                
+                taskList.appendChild(li);
+            });
+        }
+
+        // Переключение статуса выполнения задачи
+        function toggleComplete(id) {
+            tasks = tasks.map(task => 
+                task.id === id ? {...task, completed: !task.completed} : task
+            );
+            saveTasks();
+            renderTasks();
+        }
+
+        // Переключение выделения задачи
+        function toggleSelect(id) {
+            tasks = tasks.map(task => 
+                task.id === id ? {...task, selected: !task.selected} : task
+            );
+            saveTasks();
+        }
+
+        // Удаление задачи
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasks();
+            renderTasks();
+        }
+
+        // Удаление выделенных задач
+        function deleteSelected() {
+            tasks = tasks.filter(task => !task.selected);
+            saveTasks();
+            renderTasks();
+        }
+
+        // Сортировка задач
+        function sortTasks() {
+            const sortBy = document.getElementById('sortSelect').value;
+            
+            if (sortBy === 'date') {
+                tasks.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+            } else {
+                tasks.sort((a, b) => a.text.localeCompare(b.text));
+            }
+            
+            renderTasks();
+        }
+
+        // Сохранение задач в localStorage
+        function saveTasks() {
+            localStorage.setItem('travelTasks', JSON.stringify(tasks));
+        }
+
+        // Загрузка задач из localStorage
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('travelTasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+                renderTasks();
+            }
+        }
+    </script>
+</body>
+</html>

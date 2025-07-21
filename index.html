@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('ServiceWorker успешно зарегистрирован!');
+        })
+        .catch((error) => {
+          console.log('Ошибка регистрации ServiceWorker:', error);
+        });
+    });
+  }
+</script>
+	<link rel="manifest" href="/manifest.json">
+	<meta name="theme-color" content="#005baa">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Путешествия по России</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="routes.html">Маршруты</a></li>
+                <li><a href="feedback.html">Отзывы</a></li>
+                <li><a href="todo.html">Планировщик</a></li>
+            </ul>
+        </nav>
+        <h1>Путешествия по России</h1>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Открой для себя Россию</h2>
+            <p>Россия - страна с богатой историей, уникальной природой и разнообразными культурами. Отправляйтесь в путешествие по самым красивым местам нашей страны.</p>
+            <img src="images/russia-map.jpg" alt="Карта России">
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <h3>Природа</h3>
+                <p>От Байкала до Камчатки - уникальные природные достопримечательности.</p>
+            </div>
+            <div class="feature">
+                <h3>Культура</h3>
+                <p>Богатое культурное наследие от Калининграда до Владивостока.</p>
+            </div>
+            <div class="feature">
+                <h3>Приключения</h3>
+                <p>Активный отдых для любителей экстрима и спокойного туризма.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Путешествия по России</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('ServiceWorker успешно зарегистрирован!');
+        })
+        .catch((error) => {
+          console.log('Ошибка регистрации ServiceWorker:', error);
+        });
+    });
+  }
+</script>
+	<link rel="manifest" href="/manifest.json">
+	<meta name="theme-color" content="#005baa">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы - Путешествия по России</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="routes.html">Маршруты</a></li>
+                <li><a href="feedback.html">Отзывы</a></li>
+                <li><a href="todo.html">Планировщик</a></li>
+            </ul>
+        </nav>
+        <h1>Ваши отзывы</h1>
+    </header>
+
+    <main>
+        <section class="feedback-form">
+            <h2>Оставьте свой отзыв</h2>
+            <form action="process_feedback.php" method="POST">
+                <div class="form-group">
+                    <label for="name">Ваше имя:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Ваш отзыв:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit">Отправить</button>
+            </form>
+        </section>
+
+        <section class="feedback-list">
+		<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadFeedback();
+});
+
+function loadFeedback() {
+    fetch('get_feedback.php')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('feedback-container');
+            container.innerHTML = '';
+            
+            data.forEach(feedback => {
+                const div = document.createElement('div');
+                div.className = 'feedback-item';
+                div.innerHTML = `
+                    <h3>${feedback.name}</h3>
+                    <p>${feedback.message}</p>
+                    <small>${new Date(feedback.created_at).toLocaleString()}</small>
+                    <hr>
+                `;
+                container.appendChild(div);
+            });
+        });
+}
+</script>
+            <h2>Последние отзывы</h2>
+            <div id="feedback-container">
+                <!-- Здесь будут отображаться отзывы из БД -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Путешествия по России</p>
+    </footer>
+</body>
+</html>
